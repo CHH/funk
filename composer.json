@@ -1,0 +1,16 @@
+{
+    "name": "chh/funk",
+    "description": "A really tiny library for functional programming.",
+    "license": "MIT",
+    "authors": [
+        {"name": "Christoph Hochstrasser", "email": "christoph.hochstrasser@gmail.com"}
+    ],
+    "autoload": {
+        "psr-0": {
+            "CHH\\Funk": "lib/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.3"
+    }
+}
