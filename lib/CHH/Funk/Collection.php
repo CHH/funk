@@ -19,18 +19,23 @@ class Collection implements \IteratorAggregate, \Countable
                 list($operator, $val2) = $predicate;
 
                 switch ($operator) {
+                case 'eg':
                 case '=':
                     $returnValue = $val === $val2;
                     break;
+                case 'gt':
                 case '>':
                     $returnValue = $val > $val2;
                     break;
+                case 'gte':
                 case '>=':
                     $returnValue = $val >= $val2;
                     break;
+                case 'lt':
                 case '<':
                     $returnValue = $val < $val2;
                     break;
+                case 'lte':
                 case '<=':
                     $returnValue = $val <= $val2;
                     break;
@@ -91,10 +96,11 @@ class Collection implements \IteratorAggregate, \Countable
         return join($glue, $this->asArray());
     }
 
-    function tap($callback, $argv = array())
+    function tap($callback, $arguments = array())
     {
-        array_unshift($argv, $this->getIterator());
-        call_user_func_array($callback, $argv);
+        array_unshift($arguments, $this->getIterator());
+
+        call_user_func_array($callback, $arguments);
 
         return $this;
     }
@@ -220,10 +226,16 @@ class Collection implements \IteratorAggregate, \Countable
     {
         if ($value instanceof \Iterator) {
             return $value;
+
         } else if (is_array($value)) {
             return new ArrayIterator($value);
+
+        } else if ($value instanceof \Traversable) {
+            return new \IteratorIterator($value);
+
         } else if (null === $value) {
             return new EmptyIterator;
+
         } else {
             return new ArrayIterator((array) $value);
         }

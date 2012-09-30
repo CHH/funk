@@ -194,10 +194,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     {
         $a = new Collection(range(0, 10));
 
-        $b = clone $a;
         $this->assertEquals(
             range(0, 7),
-            $b->remove(array('>', 7))->asArray()
+            $a->remove(array('>', 7))->asArray()
         );
     }
 }
