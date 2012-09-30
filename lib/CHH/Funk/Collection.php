@@ -5,6 +5,7 @@ namespace CHH\Funk;
 use AppendIterator;
 use ArrayIterator;
 use EmptyIterator;
+use LimitIterator;
 
 class Collection implements \IteratorAggregate, \Countable
 {
@@ -91,6 +92,12 @@ class Collection implements \IteratorAggregate, \Countable
         return $this;
     }
 
+    function slice($offset, $count = -1)
+    {
+        $this->iterator = new LimitIterator($this->iterator, $offset, $count);
+        return $this;
+    }
+
     function join($glue = '')
     {
         return join($glue, $this->asArray());
@@ -170,7 +177,7 @@ class Collection implements \IteratorAggregate, \Countable
         });
     }
 
-    function map($callback, $argv = array())
+    function map($callback)
     {
         $this->iterator = new Iterator\MappingIterator($this->iterator, $callback);
         return $this;

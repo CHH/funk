@@ -44,12 +44,27 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            '0,1,2,3,4,5,6,7,8,9',
+            join(',', range(0, 9)),
             $a->join(',')
         );
 
         $a = new Collection();
         $this->assertEquals('', $a->join());
+    }
+
+    function testSlice()
+    {
+        $a = new Collection(range(0, 6));
+
+        $this->assertEquals(
+            range(0, 3),
+            array_values($a->dup()->slice(0, 4)->asArray())
+        );
+
+        $this->assertEquals(
+            range(3, 6),
+            array_values($a->dup()->slice(3)->asArray())
+        );
     }
 
     function testCompact()
