@@ -4,7 +4,7 @@ namespace Funk\Test;
 
 use CHH\Funk\Collection;
 
-class ArrayTest extends \PHPUnit_Framework_TestCase
+class CollectionTest extends \PHPUnit_Framework_TestCase
 {
     function testAppend()
     {
@@ -23,6 +23,15 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         # Collection implements the Countable interface
         $this->assertEquals(3, count($a));
         $this->assertEquals(3, $a->count());
+    }
+
+    function testIsEmpty()
+    {
+        $a = new Collection(array(null, 0, 0));
+
+        $this->assertTrue($a->isEmpty(function($val) {
+            return !$val;
+        }));
     }
 
     function testJoin()
