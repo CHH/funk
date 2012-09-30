@@ -66,6 +66,12 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    function testPassesIteratorsThrough()
+    {
+        $a = new Collection(new \EmptyIterator);
+        $this->assertInstanceOf('\\EmptyIterator', $a->getIterator());
+    }
+
     function testKeep()
     {
         $a = new Collection(range(0, 10));
