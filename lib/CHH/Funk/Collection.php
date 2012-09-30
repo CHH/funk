@@ -167,13 +167,12 @@ class Collection implements \IteratorAggregate, \Countable
         });
     }
 
-    function invoke($method, $argv = array())
+    function invoke($method, $arguments = array())
     {
-        return $this->map(function($val) use ($argv) {
-            $callArgv = $argv;
-            array_unshift($callArgv, $val);
+        return $this->map(function($val) use ($arguments) {
+            array_unshift($arguments, $val);
 
-            return call_user_func_array(array($val, $method), $callArgv);
+            return call_user_func_array(array($val, $method), $arguments);
         });
     }
 
