@@ -1,6 +1,6 @@
 <?php
 
-namespace CHH\Funk;
+namespace Funk;
 
 use AppendIterator;
 use ArrayIterator;
@@ -53,11 +53,18 @@ class Collection implements \IteratorAggregate, \Countable
         };
     }
 
+    # Constructor
+    #
+    # iterable - Value for initializing the collection, can be anything traversable
+    #            or an array. Scalars are converted to an array with one element.
     function __construct($iterable = null)
     {
         $this->iterator = $this->toIterator($iterable);
     }
 
+    # Public: Chainable version of "clone".
+    #
+    # Returns a clone of current the Collection
     function dup()
     {
         return clone $this;
@@ -180,6 +187,11 @@ class Collection implements \IteratorAggregate, \Countable
     {
         $this->iterator = new Iterator\MappingIterator($this->iterator, $callback);
         return $this;
+    }
+
+    function reduce($callback, $initial = null)
+    {
+        return array_reduce($this->asArray(false), $callback, $initial);
     }
 
     function isEmpty($predicate = null)

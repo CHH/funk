@@ -1,8 +1,8 @@
 <?php
 
-namespace CHH\Funk\Test;
+namespace Funk\Test;
 
-use CHH\Funk;
+use Funk\Funk;
 
 class FunkTest extends \PHPUnit_Framework_TestCase
 {

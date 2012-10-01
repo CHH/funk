@@ -2,7 +2,7 @@
 
 namespace Funk\Test;
 
-use CHH\Funk\Collection;
+use Funk\Collection;
 
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {

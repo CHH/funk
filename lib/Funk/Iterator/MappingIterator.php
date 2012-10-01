@@ -1,6 +1,6 @@
 <?php
 
-namespace CHH\Funk\Iterator;
+namespace Funk\Iterator;
 
 use IteratorIterator;
 

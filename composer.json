@@ -7,7 +7,7 @@
     ],
     "autoload": {
         "psr-0": {
-            "CHH\\Funk": "lib/"
+            "Funk\\": "lib/"
         }
     },
     "require": {

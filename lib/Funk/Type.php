@@ -1,6 +1,6 @@
 <?php
 
-namespace CHH\Funk;
+namespace Funk;
 
 class Type
 {
