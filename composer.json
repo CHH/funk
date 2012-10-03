@@ -1,6 +1,6 @@
 {
     "name": "chh/funk",
-    "description": "A really tiny library for functional programming.",
+    "description": "A minimal functional programming library for PHP",
     "license": "MIT",
     "authors": [
         {"name": "Christoph Hochstrasser", "email": "christoph.hochstrasser@gmail.com"}

@@ -9,6 +9,8 @@ Install with [Composer](http://getcomposer.org):
 
     php composer.phar require chh/funk:*@dev
 
+Then require `vendor/autoload.php` in your application.
+
 ## Collection
 
 The `Funk\Collection` class wraps a PHP iterable value and provides
@@ -19,7 +21,7 @@ Example:
 ```php
 <?php
 
-use CHH\Funk\Collection;
+use Funk\Collection;
 
 echo (new Collection)
     ->extend(range(0, 20))

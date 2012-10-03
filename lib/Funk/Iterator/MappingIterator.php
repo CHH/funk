@@ -15,6 +15,7 @@ class MappingIterator extends IteratorIterator
         }
 
         $this->callback = $callback;
+
         parent::__construct($iterator);
     }
 

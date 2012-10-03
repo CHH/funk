@@ -13,6 +13,7 @@ class CallbackFilterIterator extends \FilterIterator
         }
 
         $this->callback = $callback;
+
         parent::__construct($iterator);
     }
 
