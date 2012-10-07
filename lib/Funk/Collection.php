@@ -8,7 +8,7 @@ use EmptyIterator;
 use LimitIterator;
 use RegexIterator;
 
-class Collection implements \IteratorAggregate, \Countable
+class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
 {
     protected $iterator;
 
@@ -16,11 +16,8 @@ class Collection implements \IteratorAggregate, \Countable
     #
     # The predicate could look as follows:
     #
-    # - A plain scalar, then the "===" operator is used for compare to 
+    # - A plain scalar, then the identity ("===") operator is used for compare to
     #   the collection item.
-    # - An array, then the first item is used as operator and the second 
-    #   item as value to compare against. "=" is mapped to "===", and 
-    #   shortcuts like "eq", "gt", "gte", "lt", "lte" are supported.
     # - A callback, then the result of the call is returned.
     #
     # predicate - Specification of the predicate.
@@ -32,31 +29,8 @@ class Collection implements \IteratorAggregate, \Countable
         return function($val, $key) use ($predicate, $inverse) {
             if (is_callable($predicate)) {
                 $returnValue = (bool) call_user_func($predicate, $val, $key);
-            } else if (is_array($predicate)) {
-                list($operator, $val2) = $predicate;
-
-                switch ($operator) {
-                case 'eg':
-                case '=':
-                    $returnValue = $val === $val2;
-                    break;
-                case 'gt':
-                case '>':
-                    $returnValue = $val > $val2;
-                    break;
-                case 'gte':
-                case '>=':
-                    $returnValue = $val >= $val2;
-                    break;
-                case 'lt':
-                case '<':
-                    $returnValue = $val < $val2;
-                    break;
-                case 'lte':
-                case '<=':
-                    $returnValue = $val <= $val2;
-                    break;
-                }
+            } elseif ($predicate === null) {
+                $returnValue = $val == true;
             } else {
                 $returnValue = $val === $predicate;
             }
@@ -76,6 +50,30 @@ class Collection implements \IteratorAggregate, \Countable
     function __construct($iterable = null)
     {
         $this->iterator = $this->toIterator($iterable);
+    }
+
+    function offsetSet($offset, $value)
+    {
+        $this->assertArrayIterator();
+        $this->iterator->offsetSet($offset, $value);
+    }
+
+    function offsetGet($offset)
+    {
+        $this->assertArrayIterator();
+        return $this->iterator->offsetGet($offset);
+    }
+
+    function offsetExists($offset)
+    {
+        $this->assertArrayIterator();
+        return $this->iterator->offsetExists($offset);
+    }
+
+    function offsetUnset($offset)
+    {
+        $this->assertArrayIterator();
+        return $this->iterator->offsetUnset($offset);
     }
 
     # Public: Chainable version of "clone".
@@ -116,6 +114,22 @@ class Collection implements \IteratorAggregate, \Countable
         return iterator_to_array($this->getIterator(), $associative);
     }
 
+    # Public: Match each value against the regular expression pattern.
+    #
+    # pattern - PCRE compatible Regular Expression pattern.
+    #
+    # Examples
+    #
+    #   <?php
+    #
+    #   $c = new Collection(array('foo', 'bar', 'boo'));
+    #   var_export(
+    #     $c->match('/o+/')->asArray()
+    #   );
+    #   # Output:
+    #   # array("foo", "boo")
+    #
+    # Returns the Collection.
     function match($pattern)
     {
         $this->iterator = new RegexIterator($this->iterator, $pattern);
@@ -152,6 +166,33 @@ class Collection implements \IteratorAggregate, \Countable
         $this->iterator = new LimitIterator($this->iterator, $offset, $count);
 
         return $this;
+    }
+
+    function head($elements)
+    {
+        return $this->slice(0, $elements);
+    }
+
+    function tail($elements)
+    {
+        $count = $this->count();
+        return $this->slice($count > 0 ? $count - $elements : 0);
+    }
+
+    function first()
+    {
+        $it = $this->dup()->head(1)->getIterator();
+        $it->rewind();
+
+        return $it->current();
+    }
+
+    function last()
+    {
+        $it = $this->dup()->tail(1)->getIterator();
+        $it->rewind();
+
+        return $it->current();
     }
 
     # Public: Joins all collection items with the given glue.
@@ -307,8 +348,7 @@ class Collection implements \IteratorAggregate, \Countable
         });
     }
 
-    # Public: Invokes the method on each object in the collection. The 
-    # method gets passed the current value as first argument.
+    # Public: Invokes the method on each object in the collection.
     #
     # method    - Name of the method.
     # arguments - Additional arguments passed to the method.
@@ -316,10 +356,8 @@ class Collection implements \IteratorAggregate, \Countable
     # Returns the Collection.
     function invoke($method, $arguments = array())
     {
-        return $this->map(function($val) use ($arguments) {
-            array_unshift($arguments, $val);
-
-            return call_user_func_array(array($val, $method), $arguments);
+        return $this->map(function($value) use ($arguments) {
+            return call_user_func_array(array($value, $method), $arguments);
         });
     }
 
@@ -371,6 +409,13 @@ class Collection implements \IteratorAggregate, \Countable
         return $this;
     }
 
+    protected function assertArrayIterator()
+    {
+        if (!$this->iterator instanceof ArrayIterator) {
+            $this->iterator = new ArrayIterator($this->asArray());
+        }
+    }
+
     # Creates an instance of a CallbackFilterIterator.
     #
     # Since PHP 5.4.0 a CallbackFilterIterator is included in SPL. This 
@@ -414,9 +459,6 @@ class Collection implements \IteratorAggregate, \Countable
 
         } else if ($value instanceof \Traversable) {
             return new \IteratorIterator($value);
-
-        } else if (null === $value) {
-            return new EmptyIterator;
 
         } else {
             return new ArrayIterator((array) $value);

@@ -3,6 +3,7 @@
 namespace Funk\Test;
 
 use Funk\Collection;
+use Funk\Collection\Operator;
 
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -182,6 +183,24 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    function testFirst()
+    {
+        $a = new Collection(array(1, 2, 3, 4));
+        $b = new Collection();
+
+        $this->assertEquals(1, $a->first());
+        $this->assertEquals(null, $b->first());
+    }
+
+    function testLast()
+    {
+        $a = new Collection(array(1, 2, 3, 4));
+        $b = new Collection();
+
+        $this->assertEquals(4, $a->last());
+        $this->assertEquals(null, $b->last());
+    }
+
     function testAll()
     {
         $a = new Collection(array(1, 2, 3, 4));
@@ -221,7 +240,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             range(0, 7),
-            $a->remove(array('>', 7))->asArray()
+            $a->remove(Operator::gt(7))->asArray()
         );
     }
 }
