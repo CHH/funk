@@ -6,6 +6,7 @@ use AppendIterator;
 use ArrayIterator;
 use EmptyIterator;
 use LimitIterator;
+use RegexIterator;
 
 class Collection implements \IteratorAggregate, \Countable
 {
@@ -115,6 +116,13 @@ class Collection implements \IteratorAggregate, \Countable
         return iterator_to_array($this->getIterator(), $associative);
     }
 
+    function match($pattern)
+    {
+        $this->iterator = new RegexIterator($this->iterator, $pattern);
+
+        return $this;
+    }
+
     # Public: Converts the value to an Iterator and appends it to the 
     # current iterator via an AppendIterator.
     #
@@ -128,6 +136,7 @@ class Collection implements \IteratorAggregate, \Countable
         $appendIterator->append($this->toIterator($value));
 
         $this->iterator = $appendIterator;
+
         return $this;
     }
 
@@ -141,6 +150,7 @@ class Collection implements \IteratorAggregate, \Countable
     function slice($offset, $count = -1)
     {
         $this->iterator = new LimitIterator($this->iterator, $offset, $count);
+
         return $this;
     }
 

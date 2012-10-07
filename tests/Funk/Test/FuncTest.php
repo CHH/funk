@@ -2,9 +2,9 @@
 
 namespace Funk\Test;
 
-use Funk\Funk;
+use Funk\Func;
 
-class FunkTest extends \PHPUnit_Framework_TestCase
+class FuncTest extends \PHPUnit_Framework_TestCase
 {
     function testCurry()
     {
@@ -12,7 +12,7 @@ class FunkTest extends \PHPUnit_Framework_TestCase
             return $number * $number;
         };
 
-        $cube2 = Funk::curry($cube, array(2));
+        $cube2 = Func::curry($cube, array(2));
 
         $this->assertEquals(4, $cube2());
     }
@@ -21,7 +21,7 @@ class FunkTest extends \PHPUnit_Framework_TestCase
     {
         $called = 0;
 
-        $fn = Funk::once(function() use (&$called) {
+        $fn = Func::once(function() use (&$called) {
             $called += 1;
         });
 

@@ -14,7 +14,16 @@ Then require `vendor/autoload.php` in your application.
 ## Collection
 
 The `Funk\Collection` class wraps a PHP iterable value and provides
-methods to manipulate it.
+methods to manipulate it. The collection provides nearly all operations
+using Iterators and exposes this iterator via `getIterator` (also
+implements `IteratorAggregate`). That means that nearly all operations
+are lazy evaluated.
+
+You can see this in action, if you wrap a PDO statement in a collection
+and then call `map`. This wraps the PDO Statement in a special
+"MappingIterator", which applies the callback function on each element
+and yields the callback's return value. But this happens only when the
+"MappingIterator" is iterated, until then nothing happens.
 
 Example:
 

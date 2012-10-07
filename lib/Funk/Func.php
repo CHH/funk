@@ -5,13 +5,8 @@ namespace Funk;
 use Funk\Iterator\RangeIterator;
 use Funk\Collection;
 
-class Funk
+class Func
 {
-    static function range($start, $end)
-    {
-        return new RangeIterator($start, $end);
-    }
-
     static function curry($callback, $arguments = array())
     {
         return function() use ($callback, $arguments) {

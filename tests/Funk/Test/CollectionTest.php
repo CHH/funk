@@ -16,6 +16,16 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    function testMatch()
+    {
+        $a = new Collection(array('foo', 'boo', 'bar'));
+
+        $this->assertEquals(
+            array('foo', 'boo'),
+            $a->match('/o{2}/')->asArray()
+        );
+    }
+
     function testCount()
     {
         $a = new Collection(array('one', 'two', 'three'));
