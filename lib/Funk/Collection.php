@@ -195,6 +195,13 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return $it->current();
     }
 
+    function flip()
+    {
+        $this->iterator = new Iterator\FlipIterator($this->iterator);
+
+        return $this;
+    }
+
     # Public: Joins all collection items with the given glue.
     #
     # glue - String which is used to join the items (default: '')

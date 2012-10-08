@@ -214,6 +214,16 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         }));
     }
 
+    function testFlip()
+    {
+        $a = new Collection(array('foo' => 'bar', 'baz' => 'boo'));
+
+        $this->assertEquals(
+            array('bar' => 'foo', 'boo' => 'baz'),
+            $a->flip()->asArray()
+        );
+    }
+
     function testSome()
     {
         $a = new Collection(array(1, 2, 3, 4));
