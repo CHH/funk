@@ -6,12 +6,14 @@ class RangeIterator implements \Iterator
 {
     protected $start;
     protected $end;
+    protected $step;
     protected $position;
 
-    function __construct($start, $end)
+    function __construct($start, $end, $step = 1)
     {
-        $this->start = $start;
+        $this->start = $this->position = $start;
         $this->end = $end;
+        $this->step = $step;
     }
 
     function rewind()
@@ -31,7 +33,7 @@ class RangeIterator implements \Iterator
 
     function next()
     {
-        $this->position++;
+        $this->position += $this->step;
     }
 
     function valid()
