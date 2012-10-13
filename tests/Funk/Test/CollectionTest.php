@@ -3,7 +3,7 @@
 namespace Funk\Test;
 
 use Funk\Collection;
-use Funk\Collection\Operator;
+use Funk\Operator;
 
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {

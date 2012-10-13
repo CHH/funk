@@ -7,6 +7,7 @@ use ArrayIterator;
 use EmptyIterator;
 use LimitIterator;
 use RegexIterator;
+use itertools;
 
 class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
 {
@@ -137,6 +138,26 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return $this;
     }
 
+    # Public: Invokes the callback for each element yielded by the iterator
+    # and passes the current value and key to the callback.
+    #
+    # callback - Callback, gets passed the current value and key as arguments.
+    # context  - Bind this context when a Closure is given as callback.
+    #
+    # Returns the Collection.
+    function each($callback, $context = null)
+    {
+        if ($context !== null and $callback instanceof \Closure) {
+            $callback = \Closure::bind($callback, $context);
+        }
+
+        $iterator = $this->getIterator();
+
+        itertools\walk($iterator, $callback);
+
+        return $this;
+    }
+
     # Public: Converts the value to an Iterator and appends it to the 
     # current iterator via an AppendIterator.
     #
@@ -163,7 +184,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
     # Returns the Collection.
     function slice($offset, $count = -1)
     {
-        $this->iterator = new LimitIterator($this->iterator, $offset, $count);
+        $this->iterator = itertools\slice($this->iterator, $offset, $count);
 
         return $this;
     }
@@ -197,7 +218,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
 
     function flip()
     {
-        $this->iterator = new Iterator\FlipIterator($this->iterator);
+        $this->iterator = itertools\flip($this->iterator);
 
         return $this;
     }
@@ -370,7 +391,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
 
     function map($callback)
     {
-        $this->iterator = new Iterator\MappingIterator($this->iterator, $callback);
+        $this->iterator = itertools\map($callback, $this->getIterator());
         return $this;
     }
 
@@ -402,16 +423,14 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
 
     function keep($predicate)
     {
-        $keep = static::identityFn($predicate);
-        $this->iterator = $this->createCallbackFilterIterator($this->iterator, $keep);
+        $this->iterator = itertools\filter($this->getIterator(), static::identityFn($predicate));
 
         return $this;
     }
 
     function remove($predicate)
     {
-        $fn = static::identityFn($predicate, true);
-        $this->iterator = $this->createCallbackFilterIterator($this->iterator, $fn);
+        $this->iterator = itertools\filter($this->getIterator(), static::identityFn($predicate, true));
 
         return $this;
     }
@@ -420,22 +439,6 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
     {
         if (!$this->iterator instanceof ArrayIterator) {
             $this->iterator = new ArrayIterator($this->asArray());
-        }
-    }
-
-    # Creates an instance of a CallbackFilterIterator.
-    #
-    # Since PHP 5.4.0 a CallbackFilterIterator is included in SPL. This 
-    # method returns a pure PHP implementation of the CallbackFilterIterator 
-    # for PHP versions before 5.4.0.
-    #
-    # Returns an Iterator.
-    protected function createCallbackFilterIterator($iterator, $callback)
-    {
-        if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-            return new \CallbackFilterIterator($iterator, $callback);
-        } else {
-            return new Iterator\CallbackFilterIterator($iterator, $callback);
         }
     }
 
@@ -458,18 +461,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
     # Returns an Iterator.
     protected function toIterator($value)
     {
-        if ($value instanceof \Iterator) {
-            return $value;
-
-        } else if (is_array($value)) {
-            return new ArrayIterator($value);
-
-        } else if ($value instanceof \Traversable) {
-            return new \IteratorIterator($value);
-
-        } else {
-            return new ArrayIterator((array) $value);
-        }
+        return itertools\to_iterator($value);
     }
 }
 

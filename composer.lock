@@ -1,0 +1,55 @@
+{
+    "hash": "c9140e81b1b3078396782f6c59de7d79",
+    "packages": [
+        {
+            "name": "chh/itertools",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "http://github.com/CHH/itertools",
+                "reference": "df5d697a97dc714e46f73b17af4afc40909feacf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/CHH/itertools/zipball/df5d697a97dc714e46f73b17af4afc40909feacf",
+                "reference": "df5d697a97dc714e46f73b17af4afc40909feacf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "ext-spl": "*"
+            },
+            "time": "1350159583",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "itertools\\": "lib/"
+                },
+                "files": [
+                    "lib/itertools.php"
+                ]
+            },
+            "authors": [
+                {
+                    "name": "Christoph Hochstrasser",
+                    "email": "christoph.hochstrasser@gmail.com",
+                    "homepage": "http://christophh.net"
+                }
+            ],
+            "description": "Common functional operations for iterators.",
+            "keywords": [
+                "functional",
+                "iterators"
+            ]
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "chh/itertools": 20
+    }
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Funk\Collection;
+namespace Funk;
 
 class Operator
 {
